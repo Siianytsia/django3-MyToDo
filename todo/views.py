@@ -13,6 +13,7 @@ def home(request):
     return render(request, 'todo/home.html')
 
 
+@login_required
 def signupuser(request):
     if request.method == 'GET':
         return render(request, 'todo/signupuser.html', {'form': UserCreationForm()})
@@ -31,6 +32,7 @@ def signupuser(request):
                           {'form': UserCreationForm(), 'error': 'Passwords did not match'})
 
 
+@login_required
 def loginuser(request):
     if request.method == 'GET':
         return render(request, 'todo/loginuser.html', {'form': AuthenticationForm()})
