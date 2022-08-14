@@ -3,16 +3,51 @@
 {% block content %}
     <div class="row justify-content-center mt-5">
         <div class="col-md-10">
-            <h1>Completed Todos</h1>
+            {% if todos %}
+                <h1>{{ todos.count }} Completed Todo{{ todos.count|pluralize }}</h1>
+            {% else %}
+                <h1>Completed Todos</h1>
+            {% endif %}
         </div>
     </div>
     <div class="row justify-content-center mt-5">
         <div class="col-md-10">
+        {% if todos %}
             <div class="list-group">
                 {% for todo in todos %}
-                    <a href="{% url 'viewtodo' todo.id %}" class="list-group-item list-group-item-action{% if todo.important %} list-group-item-danger{% endif %}"><b>{{ todo.title }}</b> - Completed {{ todo.datecompleted|date:'M j Y H:i' }}</a>
+                <div class="row no-gutters">
+                    <div class="col-10">
+                        <a class="list-group-item list-group-item-action{% if todo.important %}
+                        list-group-item-warning{% endif %}" href="{% url 'viewcompletedtodo' todo.id %}">
+                            <b>{{ todo.title|truncatechars:15 }}</b>{% if todo.memo %} - {{ todo.memo|truncatechars:15 }}{% endif %}
+                        </a>
+                    </div>
+                    <div class="col-2">
+                        <div class="btn-group">
+                          <!-- Кнопка -->
+                          <button type="button" class="menu-button" data-toggle="dropdown"
+                                  aria-haspopup="true" aria-expanded="false">
+                            <b>⋮</b>
+                          </button>
+                          <!-- Меню -->
+                          <div class="dropdown-menu">
+                            <a type="button" class="dropdown-item list-group-item-danger" onclick="$('#delete').click()">Delete</a>
+                          </div>
+                        </div>
+                        <form style='display: none;' method="POST" action="{% url 'deletetodo' todo.id %}">
+                            {% csrf_token %}
+                            <button id="delete" type="submit">Delete</button>
+                        </form>
+                    </div>
+                </div>
                 {% endfor %}
             </div>
+        {% else %}
+            <div class="text-center">
+                <h2>I think, you don't have completed todos</h2>
+                <a type="button" href="{% url 'currenttodos' %}" class="btn btn-primary">Current</a>
+            </div>
+        {% endif %}
         </div>
     </div>
 {% endblock %}

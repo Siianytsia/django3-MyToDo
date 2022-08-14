@@ -19,6 +19,21 @@
     nav {
         background-color: #02ab9d;
     }
+
+    .menu-button {
+        height: 49px;
+        width: 25px;
+        border-radius: 4px;
+        border: none;
+        background-color: #6ec99a;
+    }
+
+    .checkbox {
+        height: 20px;
+        width: 20px;
+        margin-left: 0;
+        padding-top: auto;
+    }
     </style>
 
     <title>MyToDo</title>
@@ -27,7 +42,7 @@
 
 <nav class="navbar navbar-expand-md navbar-light">
 <div class="container">
-    <a class="navbar-brand" href="{% url 'home' %}">
+    <a class="navbar-brand" href="{% url 'currenttodos' %}">
          <img src="{% static 'todo/logo.png' %}" width="30" height="30" class="d-inline-block align-top">
         <span>MyToDo</span>
     </a>

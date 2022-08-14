@@ -4,9 +4,9 @@
     <div class="row justify-content-center mt-5">
         <div class="col-md-10">
             {% if todos %}
-                 <h1>{{ todos.count }} Current Todo{{ todos.count|pluralize }}</h1>
+                <h1>{{ todos.count }} Current Todo{{ todos.count|pluralize }}</h1>
             {% else %}
-                           <h1>Current Todos</h1>
+                <h1>Current Todos</h1>
             {% endif %}
         </div>
     </div>
@@ -15,7 +15,40 @@
         {% if todos %}
             <div class="list-group">
                 {% for todo in todos %}
-                    <a href="{% url 'viewtodo' todo.id %}" class="list-group-item list-group-item-action{% if todo.important %} list-group-item-warning{% endif %}"><b>{{ todo.title }}</b>{% if todo.memo %} - {{ todo.memo|truncatechars:30 }}{% endif %}</a>
+                <div class="row no-gutters">
+                    <div class="col-10">
+                        <a class="list-group-item list-group-item-action{% if todo.important %}
+                        list-group-item-warning{% endif %}" href="{% url 'viewtodo' todo.id %}">
+                            <span><input type="checkbox"></span>
+                            <b>{{ todo.title|truncatechars:15 }}</b>{% if todo.memo %} - {{ todo.memo|truncatechars:15 }}{% endif %}
+                        </a>
+                    </div>
+                    <div class="col-2">
+                        <div class="btn-group">
+                          <!-- Кнопка -->
+                          <button type="button" class="menu-button" data-toggle="dropdown"
+                                  aria-haspopup="true" aria-expanded="false">
+                            <b>⋮</b>
+                          </button>
+                          <!-- Меню -->
+                          <div class="dropdown-menu">
+                            <a class="dropdown-item" href="{% url 'viewtodo' todo.id %}">Change</a>
+                            <a type="button" class="dropdown-item" onclick="$('#complete').click()">Move to completed</a>
+                            <a type="button" class="dropdown-item list-group-item-danger" onclick="$('#delete').click()">Delete</a>
+                          </div>
+                        </div>
+                        {% if todo.datecompleted is None %}
+                            <form style='display: none;' method="POST" action="{% url 'completetodo' todo.id %}">
+                                {% csrf_token %}
+                                <button id="complete" type="submit">Complete</button>
+                            </form>
+                        {% endif %}
+                        <form style='display: none;' method="POST" action="{% url 'deletetodo' todo.id %}">
+                            {% csrf_token %}
+                            <button id="delete" type="submit">Delete</button>
+                        </form>
+                    </div>
+                </div>
                 {% endfor %}
             </div>
         {% else %}
